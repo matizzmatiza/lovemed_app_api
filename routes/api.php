@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ChangeEmailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,10 @@ Route::get('/events/{id}', [EventController::class, 'show']);
 // all users
 Route::get('/users/{id}', [UserController::class, 'show']);
 Route::put('/users/{id}', [UserController::class, 'update']);
+
+// email change
+Route::post('/change-email/{id}', [ChangeEmailController::class, 'changeEmail']);
+Route::post('/email-verification/{id}', [ChangeEmailController::class, 'emailVerification']);
 
 // jurors
 Route::get('/jurors/{id}', [UserController::class, 'indexJurors']);

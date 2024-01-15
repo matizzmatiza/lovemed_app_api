@@ -60,7 +60,7 @@ class UserController extends Controller
         $juror = User::create($request->all());
 
         $emailController = new EmailController();
-        $response = $emailController->sendEmail($request->email, $randomPassword, $request->name, $request->surname);
+        $response = $emailController->sendEmailJurorFirstLogin($request->email, $randomPassword, $request->name, $request->surname);
 
         return response()->json($juror, 201);
     }

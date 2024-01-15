@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Mail;
 
 class EmailController extends Controller
 {
-    public function sendEmail($email, $tempPassword, $name, $surname)
+    public function sendEmailJurorFirstLogin($email, $tempPassword, $name, $surname)
     {
         $emailData = [
             'to' => $email,
@@ -18,6 +18,22 @@ class EmailController extends Controller
         ];
 
         Mail::send('emails.juror_first_login', $emailData, function ($message) use ($emailData) {
+            $message->to($emailData['to']);
+            $message->subject($emailData['subject']);
+        });
+
+        return "E-mail wysłany pomyślnie!";
+    }
+
+    public function sendEmailVerificationCode($email, $verificationCode)
+    {
+        $emailData = [
+            'to' => $email,
+            'subject' => 'Kod weryfikacyjny',
+            'verificationCode' => $verificationCode,
+        ];
+
+        Mail::send('emails.new_email_verification_code', $emailData, function ($message) use ($emailData) {
             $message->to($emailData['to']);
             $message->subject($emailData['subject']);
         });
