@@ -38,4 +38,10 @@ class EventController extends Controller
 
         return response()->json($event, 201);
     }
+
+    public function show($eventId)
+    {
+        $event = Event::find($eventId);
+        return response()->json($event);
+    }
 }

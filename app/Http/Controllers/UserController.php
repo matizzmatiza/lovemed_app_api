@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -28,31 +29,37 @@ class UserController extends Controller
         return response()->json(['message' => 'Dane użytkownika zaktualizowane']);
     }
 
-    public function changeEmail(Request $request) 
+    public function indexJurors($eventId)
     {
-        $user = Auth::user();
-        $user->new_email = $request->email;
-        // Generuj kod weryfikacyjny
-        $user->verification_code = Str::random(6);
-        $user->save();
-      
-        // Wysyłaj email z kodem
-        Mail::to($user->new_email)->send(new VerificationCodeMail($user->verification_code));
-      
-        return response()->json(['success' => true]);
+        $jurors = User::whereHas('rank', function ($query) {
+            $query->where('name', 'juror');
+        })->where('event_id', $eventId)->get();
+
+        return response()->json($jurors);
     }
 
-    public function verifyCode(Request $request)
+    public function storeJuror(Request $request)
     {
-        $user = Auth::user();
-        if ($user->verification_code == $request->code) {
-            $user->email = $user->new_email;
-            $user->email_verified_at = now();
-            $user->save();
-        
-            return response()->json(['success' => true]);
-        }
-        
-        return response()->json(['success' => false]);
-    } 
+        $request->validate([
+            'name' => 'required',
+            'surname' => 'required',
+            'email' => 'required',
+            'event_id' => 'required',
+        ]);
+
+        $randomPassword = Str::random(4) . mt_rand(1000, 9999);
+
+        // trzeba będzie jeszcze automatycznie wysyłać maila z hasłem
+
+        // set role manually
+        // 2 is juror
+        $request->merge([
+            'rank_id' => 2,
+            'password' => bcrypt($randomPassword),
+        ]);
+
+        $juror = User::create($request->all());
+
+        return response()->json($juror, 201);
+    }
 }
