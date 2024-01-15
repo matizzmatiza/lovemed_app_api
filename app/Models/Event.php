@@ -14,11 +14,17 @@ class Event extends Model
         'event_place',
         'event_start_date',
         'event_start_time',
-        'event_desc'
+        'event_desc',
+        'user_id',
     ];
 
     public function users()
     {
         return $this->belongsTo(User::class, 'event_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

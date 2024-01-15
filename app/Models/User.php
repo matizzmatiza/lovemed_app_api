@@ -26,6 +26,10 @@ class User extends Authenticatable
         'rank_id',
     ];
 
+    public static $rules = [
+        'email' => 'unique:users,email',
+    ];
+
     /**
      * The attributes that should be hidden for serialization.
      *

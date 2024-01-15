@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Http\Controllers\EmailController;
 
 class UserController extends Controller
 {
@@ -49,8 +50,6 @@ class UserController extends Controller
 
         $randomPassword = Str::random(4) . mt_rand(1000, 9999);
 
-        // trzeba będzie jeszcze automatycznie wysyłać maila z hasłem
-
         // set role manually
         // 2 is juror
         $request->merge([
@@ -60,6 +59,21 @@ class UserController extends Controller
 
         $juror = User::create($request->all());
 
+        $emailController = new EmailController();
+        $response = $emailController->sendEmail($request->email, $randomPassword, $request->name, $request->surname);
+
         return response()->json($juror, 201);
     }
+
+    public function destroyJuror($id)
+    {
+        $user = User::find($id);
+        if ($user) {
+            $user->delete();
+            return response()->json(['message' => 'User deleted successfully']);
+        } else {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+    }
+
 }

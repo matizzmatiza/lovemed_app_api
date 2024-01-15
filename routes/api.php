@@ -21,18 +21,21 @@ use App\Http\Controllers\UserController;
 //     return $request->user();
 // });
 
+// login
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout']);
 
+// events
 Route::get('/events', [EventController::class, 'index']);
 Route::delete('/events/{id}', [EventController::class, 'destroy']);
 Route::post('/events', [EventController::class, 'store']);
 Route::get('/events/{id}', [EventController::class, 'show']);
 
+// all users
 Route::get('/users/{id}', [UserController::class, 'show']);
 Route::put('/users/{id}', [UserController::class, 'update']);
-Route::post('/users', [UserController::class, 'storeJuror']);
-Route::get('/jurors/{id}', [UserController::class, 'indexJurors']);
 
-// Route::post('/change-email', 'UserController@changeEmail');
-// Route::post('/verify-code', 'UserController@verifyCode');
+// jurors
+Route::get('/jurors/{id}', [UserController::class, 'indexJurors']);
+Route::delete('/jurors/{id}', [UserController::class, 'destroyJuror']);
+Route::post('/jurors', [UserController::class, 'storeJuror']);

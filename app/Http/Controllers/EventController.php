@@ -32,6 +32,7 @@ class EventController extends Controller
             'event_start_date' => 'required|date',
             'event_start_time' => 'required|date',
             'event_desc' => 'required|string',
+            'user_id' => 'required|integer',
         ]);
 
         $event = Event::create($validatedData);
