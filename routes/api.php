@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ChangeEmailController;
+use App\Http\Controllers\CsrfTokenController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,7 @@ use App\Http\Controllers\ChangeEmailController;
 // login
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout']);
+Route::get('/csrf-token', [CsrfTokenController::class, 'getToken']);
 
 // events
 Route::get('/events', [EventController::class, 'index']);
@@ -37,6 +39,7 @@ Route::get('/users/{id}', [UserController::class, 'show']);
 Route::put('/users/{id}', [UserController::class, 'update']);
 Route::post('/check-change-password/{id}', [UserController::class, 'checkChangePassword']);
 Route::post('set-new-password/{id}', [UserController::class, 'setNewPassword']);
+Route::post('/reset-password/{id}', [UserController::class, 'resetPassword']);
 
 // email change
 Route::post('/change-email/{id}', [ChangeEmailController::class, 'changeEmail']);
@@ -46,3 +49,11 @@ Route::post('/email-verification/{id}', [ChangeEmailController::class, 'emailVer
 Route::get('/jurors/{id}', [UserController::class, 'indexJurors']);
 Route::delete('/jurors/{id}', [UserController::class, 'destroyJuror']);
 Route::post('/jurors', [UserController::class, 'storeJuror']);
+
+
+// super administrator
+
+// organizers
+Route::get('/organizers', [UserController::class, 'indexOrganizers']);
+Route::post('/organizers', [UserController::class, 'storeOrganizer']);
+Route::delete('/organizers/{id}', [UserController::class, 'destroyOrganizer']);

@@ -16,6 +16,20 @@ class UserController extends Controller
         return response()->json($user);
     }
 
+    public function resetPassword(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+        $randomPassword = Str::random(4) . mt_rand(1000, 9999);
+        $user->update([
+            'password' => bcrypt($randomPassword),
+        ]);
+
+        $emailController = new EmailController();
+        $response = $emailController->sendEmailResetPassword($user->email, $randomPassword, $user->name, $user->surname);
+
+        return response()->json(['message' => 'Hasło użytkownika zresetowane']);
+    }
+
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -29,6 +43,48 @@ class UserController extends Controller
         $user->update($request->all());
 
         return response()->json(['message' => 'Dane użytkownika zaktualizowane']);
+    }
+
+    public function indexOrganizers() {
+        $organizers = User::whereHas('rank', function ($query) {
+            $query->where('name', 'organizer');
+        })->get();
+
+        return response()->json($organizers);
+    }
+
+    public function storeOrganizer(Request $request) {
+        $request->validate([
+            'name' => 'required',
+            'surname' => 'required',
+            'email' => 'required',
+        ]);
+
+        $randomPassword = Str::random(4) . mt_rand(1000, 9999);
+
+        // set role manually
+        // 2 is organizer
+        $request->merge([
+            'rank_id' => 2,
+            'password' => bcrypt($randomPassword),
+        ]);
+
+        $organizer = User::create($request->all());
+
+        $emailController = new EmailController();
+        $response = $emailController->sendEmailOrganizerFirstLogin($request->email, $randomPassword, $request->name, $request->surname);
+
+        return response()->json($organizer, 201);
+    }
+
+    public function destroyOrganizer($id) {
+        $user = User::find($id);
+        if($user) {
+            $user->delete();
+            return response()->json(['message' => 'User deleted successfully']);
+        } else {
+            return response()->json(['message' => 'User not found'], 404);
+        }
     }
 
     public function indexJurors($eventId)
