@@ -43,13 +43,5 @@ class ChangeEmailController extends Controller
         // send email
         $emailController = new EmailController();
         $response = $emailController->sendEmailVerificationCode($request->email, $verification_code);
-
-        // $user = User::find($userId);
-        // $user->email_verified_at = now();
-        // $user->save();
-        // return response()->json([
-        //     'message' => 'Email verified successfully',
-        //     'user' => $user
-        // ], 200);
     }
 }

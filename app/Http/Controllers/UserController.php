@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Http\Controllers\EmailController;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -51,9 +52,9 @@ class UserController extends Controller
         $randomPassword = Str::random(4) . mt_rand(1000, 9999);
 
         // set role manually
-        // 2 is juror
+        // 3 is juror
         $request->merge([
-            'rank_id' => 2,
+            'rank_id' => 3,
             'password' => bcrypt($randomPassword),
         ]);
 
@@ -76,4 +77,35 @@ class UserController extends Controller
         }
     }
 
+    public function checkChangePassword(Request $request, $id)
+    {
+        // get password from database
+        $user = User::findOrFail($id);
+        $oldPassword = $user->password;
+        $newPassword = $request->newPassword;
+
+        if (Hash::check($newPassword, $oldPassword)) {
+            return response()->json(['message' => 'Hasło użytkownika nie zostało zmienione'], 400);
+        } else {
+            $user->update([
+                'new_password' => bcrypt($newPassword),
+            ]);
+            return response()->json(['message' => 'Hasło użytkownika jest nowe']);
+        }
+    }
+
+    public function setNewPassword(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        if(Hash::check($request->oldPassword, $user->password)) {
+            $user->update([
+                'password' => $user->new_password,
+                'new_password' => null,
+            ]);
+            return response()->json(['message' => 'Stare hasło jest poprawne']);
+        } else {
+            return response()->json(['message' => 'Stare hasło jest niepoprawne'], 400);
+        }
+    }
 }

@@ -24,6 +24,7 @@ class User extends Authenticatable
         'phone_number',
         'event_id',
         'rank_id',
+        'new_password',
     ];
 
     public static $rules = [

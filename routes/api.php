@@ -35,6 +35,8 @@ Route::get('/events/{id}', [EventController::class, 'show']);
 // all users
 Route::get('/users/{id}', [UserController::class, 'show']);
 Route::put('/users/{id}', [UserController::class, 'update']);
+Route::post('/check-change-password/{id}', [UserController::class, 'checkChangePassword']);
+Route::post('set-new-password/{id}', [UserController::class, 'setNewPassword']);
 
 // email change
 Route::post('/change-email/{id}', [ChangeEmailController::class, 'changeEmail']);
