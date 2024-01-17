@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Http\Controllers\EmailController;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Event;
 
 class UserController extends Controller
 {
@@ -57,7 +58,7 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required',
             'surname' => 'required',
-            'email' => 'required',
+            'email' => 'required|email',
         ]);
 
         $randomPassword = Str::random(4) . mt_rand(1000, 9999);
@@ -85,6 +86,47 @@ class UserController extends Controller
         } else {
             return response()->json(['message' => 'User not found'], 404);
         }
+    }
+
+    public function updateOrganizer(Request $request, $id) {
+        $request->validate([
+            'name' => 'required',
+            'surname' => 'required',
+            'phone_number' => 'required',
+            'email' => 'required|email'
+        ]);
+
+        $user = User::findOrFail($id);
+        $user->update($request->all());
+
+        return response()->json(['message' => 'Dane użytkownika zaktualizowane']);
+    }
+
+    public function singleOrganizer($id) {
+        $organizer = User::findOrFail($id);
+        return response()->json($organizer);
+    }
+
+    public function organizerEvents($userId) {
+        // Pobierz wydarzenia przypisane do organizatora
+        $organizerEvents = Event::where('user_id', $userId)->get();
+
+        // Pobierz dane organizatora
+        $organizer = User::findOrFail($userId);
+    
+        // Pobierz użytkowników z rangą 'juror' (rank_id = 3) przypisanych do wydarzeń organizatora
+        $jurors = User::where('rank_id', 3)->whereIn('event_id', $organizerEvents->pluck('id'))->get();
+    
+        // Pobierz użytkowników z rangą 'member' (rank_id = 4) przypisanych do wydarzeń organizatora
+        $members = User::where('rank_id', 4)->whereIn('event_id', $organizerEvents->pluck('id'))->get();
+    
+        // Zwróć odpowiedź JSON z wszystkimi danymi
+        return response()->json([
+            'organizer' => $organizer,
+            'events' => $organizerEvents,
+            'jurors' => $jurors,
+            'members' => $members,
+        ]);
     }
 
     public function indexJurors($eventId)

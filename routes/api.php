@@ -55,5 +55,8 @@ Route::post('/jurors', [UserController::class, 'storeJuror']);
 
 // organizers
 Route::get('/organizers', [UserController::class, 'indexOrganizers']);
+Route::get('/organizers/{id}', [UserController::class, 'singleOrganizer']);
 Route::post('/organizers', [UserController::class, 'storeOrganizer']);
 Route::delete('/organizers/{id}', [UserController::class, 'destroyOrganizer']);
+Route::put('/organizers/{id}', [UserController::class, 'updateOrganizer']);
+Route::get('/organizers/{id}/events', [UserController::class, 'organizerEvents']);
