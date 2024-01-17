@@ -29,7 +29,9 @@ class AuthController extends Controller
 
         return response()->json([
             'token' => $token,
-            'userId' => $user->id // Dodaj identyfikator użytkownika do odpowiedzi
+            'userId' => $user->id,
+            'userRank' => $user->rank->name,
+            'firstLogin' => $user->first_login,
         ]);
     }
 

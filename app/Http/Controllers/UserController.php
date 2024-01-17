@@ -206,4 +206,16 @@ class UserController extends Controller
             return response()->json(['message' => 'Stare hasło jest niepoprawne'], 400);
         }
     }
+
+    public function saveNewPassword(Request $request)
+    {
+        $user = User::findOrFail($request->userId);
+
+        $user->update([
+            'password' => bcrypt($request->newPassword),
+            'first_login' => 0,
+        ]);
+
+        return response()->json(['message' => 'Hasło użytkownika zostało zmienione']);
+    }
 }

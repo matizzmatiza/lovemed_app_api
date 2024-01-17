@@ -40,6 +40,7 @@ Route::put('/users/{id}', [UserController::class, 'update']);
 Route::post('/check-change-password/{id}', [UserController::class, 'checkChangePassword']);
 Route::post('set-new-password/{id}', [UserController::class, 'setNewPassword']);
 Route::post('/reset-password/{id}', [UserController::class, 'resetPassword']);
+Route::post('/save-new-password', [UserController::class, 'saveNewPassword']);
 
 // email change
 Route::post('/change-email/{id}', [ChangeEmailController::class, 'changeEmail']);
