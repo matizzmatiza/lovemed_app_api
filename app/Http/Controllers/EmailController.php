@@ -29,7 +29,7 @@ class EmailController extends Controller
     {
         $emailData = [
             'to' => $email,
-            'subject' => 'Resetowanie hasła - SYSTEM LOVEMED',
+            'subject' => 'Resetowanie hasła',
             'tempPassword' => $tempPassword,
             'name' => $name,
             'surname' => $surname,

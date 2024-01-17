@@ -33,6 +33,7 @@ Route::get('/events', [EventController::class, 'index']);
 Route::delete('/events/{id}', [EventController::class, 'destroy']);
 Route::post('/events', [EventController::class, 'store']);
 Route::get('/events/{id}', [EventController::class, 'show']);
+Route::get('/juror/{id}/event/', [EventController::class, 'getJurorEvent']);
 
 // all users
 Route::get('/users/{id}', [UserController::class, 'show']);

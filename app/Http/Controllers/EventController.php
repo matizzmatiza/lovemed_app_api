@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Event;
+use App\Models\User;
 
 class EventController extends Controller
 {
@@ -43,6 +44,13 @@ class EventController extends Controller
     public function show($eventId)
     {
         $event = Event::find($eventId);
+        return response()->json($event);
+    }
+
+    public function getJurorEvent($jurorId)
+    {
+        $juror = User::find($jurorId);
+        $event = Event::find($juror->event_id);
         return response()->json($event);
     }
 }
