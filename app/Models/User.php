@@ -52,6 +52,8 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    protected $table = 'users';
+
     public function rank()
     {
         return $this->belongsTo(Rank::class);
@@ -60,5 +62,10 @@ class User extends Authenticatable
     public function events()
     {
         return $this->belongsTo(Event::class, 'event_id');
+    }
+
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class);
     }
 }

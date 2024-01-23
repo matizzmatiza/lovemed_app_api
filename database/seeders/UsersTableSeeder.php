@@ -22,6 +22,7 @@ class UsersTableSeeder extends Seeder
             'email' => 'mateusz@bytebuilders.pl',
             'password' => Hash::make('Pomidor1'),
             'rank_id' => 1,
+            'first_login' => 0,
         ]);
     }
 }

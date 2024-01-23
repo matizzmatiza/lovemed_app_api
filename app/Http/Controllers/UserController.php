@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use App\Http\Controllers\EmailController;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Event;
+use App\Models\Category;
 
 class UserController extends Controller
 {
@@ -102,6 +103,20 @@ class UserController extends Controller
         return response()->json(['message' => 'Dane użytkownika zaktualizowane']);
     }
 
+    public function updateJuror(Request $request, $id) {
+        $request->validate([
+            'name' => 'required',
+            'surname' => 'required',
+            'phone_number' => 'required',
+            'email' => 'required|email'
+        ]);
+
+        $user = User::findOrFail($id);
+        $user->update($request->all());
+
+        return response()->json(['message' => 'Dane użytkownika zaktualizowane']);
+    }
+
     public function singleOrganizer($id) {
         $organizer = User::findOrFail($id);
         return response()->json($organizer);
@@ -145,6 +160,11 @@ class UserController extends Controller
             'surname' => 'required',
             'email' => 'required',
             'event_id' => 'required',
+            'categories' => 'required|array',
+        ]);
+
+        $validatedData = $request->validate([
+            'categories' => 'required|array',
         ]);
 
         $randomPassword = Str::random(4) . mt_rand(1000, 9999);
@@ -157,6 +177,9 @@ class UserController extends Controller
         ]);
 
         $juror = User::create($request->all());
+
+        // Przypisanie kategorii do jurora
+        $juror->categories()->sync($validatedData['categories']);
 
         $emailController = new EmailController();
         $response = $emailController->sendEmailJurorFirstLogin($request->email, $randomPassword, $request->name, $request->surname);
@@ -217,5 +240,13 @@ class UserController extends Controller
         ]);
 
         return response()->json(['message' => 'Hasło użytkownika zostało zmienione']);
+    }
+
+    public function indexJurorsAdmin() {
+        $jurors = User::whereHas('rank', function ($query) {
+            $query->where('name', 'juror');
+        })->get();
+
+        return response()->json($jurors);
     }
 }

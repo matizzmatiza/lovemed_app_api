@@ -28,7 +28,7 @@ class AuthController extends Controller
         $token = $user->createToken('personal-access-token')->plainTextToken;
 
         // zapisz token w bazie danych w tabeli users w kolumnie remember_token dla danego uzytkownika
-        $user->remember_token = $token;
+        // $user->remember_token = $token;
 
 
         return response()->json([

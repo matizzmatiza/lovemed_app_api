@@ -7,6 +7,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ChangeEmailController;
 use App\Http\Controllers\CsrfTokenController;
+use App\Http\Controllers\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,8 +53,13 @@ Route::get('/jurors/{id}', [UserController::class, 'indexJurors']);
 Route::delete('/jurors/{id}', [UserController::class, 'destroyJuror']);
 Route::post('/jurors', [UserController::class, 'storeJuror']);
 
+// categories
+Route::get('/event/{id}/categories', [CategoryController::class, 'indexCategories']);
+Route::get('/juror/{jurorId}/categories', [CategoryController::class, 'indexCategoriesJuror']);
+Route::post('/categories', [CategoryController::class, 'storeCategory']);
+Route::delete('/categories/{id}', [CategoryController::class, 'destroyCategory']);
 
-// super administrator
+// super administrator web client
 
 // organizers
 Route::get('/organizers', [UserController::class, 'indexOrganizers']);
@@ -62,3 +68,7 @@ Route::post('/organizers', [UserController::class, 'storeOrganizer']);
 Route::delete('/organizers/{id}', [UserController::class, 'destroyOrganizer']);
 Route::put('/organizers/{id}', [UserController::class, 'updateOrganizer']);
 Route::get('/organizers/{id}/events', [UserController::class, 'organizerEvents']);
+
+// jurors
+Route::get('/jurors', [UserController::class, 'indexJurorsAdmin']);
+Route::put('/jurors/{id}', [UserController::class, 'updateJuror']);
